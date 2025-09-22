@@ -6,7 +6,7 @@ interface ConnectionStatusProps {
 }
 
 export default function ConnectionStatus({
-	isConnected,
+	isConnected: _isConnected,
 	status,
 }: ConnectionStatusProps) {
 	const getStatusInfo = () => {

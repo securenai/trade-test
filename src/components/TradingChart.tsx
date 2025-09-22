@@ -9,7 +9,7 @@ import {
 } from "lightweight-charts"
 
 interface CandlestickData {
-	time: number // Unix timestamp in seconds
+	time: number
 	open: number
 	high: number
 	low: number
@@ -43,7 +43,7 @@ export default function TradingChart({
 			width,
 			height,
 			layout: {
-				background: { type: "solid", color: "#1a1a1a" },
+				background: { color: "#1a1a1a" },
 				textColor: "#d1d4dc",
 			},
 			grid: {
@@ -123,7 +123,8 @@ export default function TradingChart({
 				maxPrice: Math.max(...data.map((d) => d.high)),
 			})
 
-			seriesRef.current.setData(data)
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			seriesRef.current.setData(data as any)
 
 			// Fit content to show all data properly
 			if (chartRef.current) {
@@ -152,7 +153,8 @@ export default function TradingChart({
 			})
 
 			// Update only the last candle
-			seriesRef.current.update(updatedCandle)
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			seriesRef.current.update(updatedCandle as any)
 		}
 	}, [currentPrice, data])
 
