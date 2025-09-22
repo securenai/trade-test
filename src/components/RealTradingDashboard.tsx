@@ -124,6 +124,7 @@ export default function RealTradingDashboard({
 			<TradingChart
 				data={candlestickData}
 				currentPrice={currentPrice?.price}
+				candleInterval={5} // Create new candles every 5 minutes
 				height={500}
 			/>
 
