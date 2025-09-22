@@ -38,7 +38,7 @@ export default function TradingChart({
 	useEffect(() => {
 		if (!chartContainerRef.current) return
 
-		// Create the chart
+		// Create the chart with zoom enabled
 		const chart = createChart(chartContainerRef.current, {
 			width,
 			height,
@@ -55,11 +55,26 @@ export default function TradingChart({
 			},
 			rightPriceScale: {
 				borderColor: "#485c7b",
+				scaleMargins: {
+					top: 0.1,
+					bottom: 0.1,
+				},
 			},
 			timeScale: {
 				borderColor: "#485c7b",
 				timeVisible: true,
 				secondsVisible: false,
+			},
+			handleScroll: {
+				mouseWheel: true,
+				pressedMouseMove: true,
+				horzTouchDrag: true,
+				vertTouchDrag: true,
+			},
+			handleScale: {
+				axisPressedMouseMove: true,
+				mouseWheel: true,
+				pinch: true,
 			},
 		})
 
@@ -143,6 +158,68 @@ export default function TradingChart({
 
 	return (
 		<div className="w-full">
+			{/* Zoom Controls */}
+			<div className="flex justify-end mb-2 space-x-2">
+				<button
+					onClick={() => {
+						if (chartRef.current) {
+							const priceScale =
+								chartRef.current.priceScale("right")
+							const visibleRange = priceScale.getVisibleRange()
+							if (visibleRange) {
+								const center =
+									(visibleRange.from + visibleRange.to) / 2
+								const range =
+									visibleRange.to - visibleRange.from
+								const newRange = range * 0.7 // Zoom in by 30%
+								priceScale.setVisibleRange({
+									from: center - newRange / 2,
+									to: center + newRange / 2,
+								})
+							}
+						}
+					}}
+					className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded transition-colors"
+				>
+					Zoom In
+				</button>
+				<button
+					onClick={() => {
+						if (chartRef.current) {
+							const priceScale =
+								chartRef.current.priceScale("right")
+							const visibleRange = priceScale.getVisibleRange()
+							if (visibleRange) {
+								const center =
+									(visibleRange.from + visibleRange.to) / 2
+								const range =
+									visibleRange.to - visibleRange.from
+								const newRange = range * 1.4 // Zoom out by 40%
+								priceScale.setVisibleRange({
+									from: center - newRange / 2,
+									to: center + newRange / 2,
+								})
+							}
+						}
+					}}
+					className="px-3 py-1 bg-gray-600 hover:bg-gray-700 text-white text-sm rounded transition-colors"
+				>
+					Zoom Out
+				</button>
+				<button
+					onClick={() => {
+						if (chartRef.current) {
+							chartRef.current.priceScale("right").applyOptions({
+								autoScale: true,
+							})
+						}
+					}}
+					className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-sm rounded transition-colors"
+				>
+					Auto Scale
+				</button>
+			</div>
+
 			<div
 				ref={chartContainerRef}
 				className="w-full rounded-lg border border-gray-700 bg-gray-900"
